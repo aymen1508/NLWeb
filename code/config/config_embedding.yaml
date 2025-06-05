@@ -1,10 +1,10 @@
-preferred_provider: azure_openai
+preferred_provider: openai
 
 providers:
   openai:
     api_key_env: OPENAI_API_KEY
     api_endpoint_env: OPENAI_ENDPOINT
-    model: text-embedding-3-small
+    model: all-MiniLM-L6-v2-GGUF
 
   gemini:
     api_key_env: GCP_PROJECT

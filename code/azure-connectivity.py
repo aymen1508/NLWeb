@@ -13,6 +13,7 @@ try:
     from openai import OpenAI, AzureOpenAI
     from azure.core.credentials import AzureKeyCredential
     from azure.search.documents import SearchClient
+    from ollama import Client
     from config.config import CONFIG
 except ImportError as e:
     print(f"Error importing required libraries: {e}")
@@ -104,6 +105,26 @@ async def check_openai_api():
         client = OpenAI(api_key=api_key)
         models = client.models.list()
         print(f"✅ Successfully connected to OpenAI API")
+        return True
+    except Exception as e:
+        print(f"❌ Error connecting to OpenAI API: {e}")
+        return False
+
+async def check_ollama_api():
+    """Check Ollama API connectivity"""
+    print("\nChecking Ollama API connectivity...")
+    
+    # Check if Ollama is configured
+    if "ollama" not in CONFIG.llm_endpoints:
+        print("❌ Ollama provider not configured")
+        return False
+    
+    # ollama_config = CONFIG.llm_endpoints["ollama"]
+    
+    try:
+        client=Client()
+        models = client.models.list()
+        print(f"✅ Successfully connected to Ollama API")
         return True
     except Exception as e:
         print(f"❌ Error connecting to OpenAI API: {e}")

@@ -24,6 +24,7 @@ from llm.azure_llama import provider as llama_provider
 from llm.azure_deepseek import provider as deepseek_provider
 from llm.inception import provider as inception_provider
 from llm.snowflake import provider as snowflake_provider
+from llm.ollama import provider as ollama_provider
 
 from utils.logging_config_helper import get_configured_logger, LogLevel
 logger = get_configured_logger("llm_wrapper")
@@ -37,7 +38,8 @@ _llm_type_providers = {
     "llama_azure": llama_provider,
     "deepseek_azure": deepseek_provider,
     "inception": inception_provider,
-    "snowflake": snowflake_provider
+    "snowflake": snowflake_provider,
+    "ollama": ollama_provider
 }
 
 async def ask_llm(
@@ -165,8 +167,8 @@ def get_available_providers() -> list:
     for provider_name, provider_config in CONFIG.llm_endpoints.items():
         # Check if provider config exists and has required fields
         if (provider_config and 
-            hasattr(provider_config, 'api_key') and provider_config.api_key and 
-            provider_config.api_key.strip() != "" and
+            ((hasattr(provider_config, 'api_key') and provider_config.api_key and 
+            provider_config.api_key.strip() != "") or not hasattr(provider_config, 'api_key')) and
             hasattr(provider_config, 'models') and provider_config.models and
             provider_config.models.high and provider_config.models.low):
             available_providers.append(provider_name)
