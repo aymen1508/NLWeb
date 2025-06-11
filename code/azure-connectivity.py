@@ -123,7 +123,7 @@ async def check_ollama_api():
     
     try:
         client=Client()
-        models = client.models.list()
+        models = client.list()
         print(f"✅ Successfully connected to Ollama API")
         return True
     except Exception as e:
@@ -232,7 +232,8 @@ async def main():
         check_inception_api(),
         check_openai_api(),
         check_azure_openai_api(),
-        check_embedding_api()
+        check_embedding_api(),
+        check_ollama_api()
     ]
     
     results = await asyncio.gather(*tasks, return_exceptions=True)

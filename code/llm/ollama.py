@@ -2,7 +2,7 @@
 # Licensed under the MIT License
 
 """
-OpenAI wrapper for LLM functionality.
+Ollama wrapper for LLM functionality.
 
 WARNING: This code is under development and may undergo changes in future releases.
 Backwards compatibility is not guaranteed at this time.
@@ -15,6 +15,7 @@ import logging
 import asyncio
 from typing import Dict, Any, List, Optional
 
+from click import option
 from ollama import AsyncClient
 from config.config import CONFIG
 import threading
@@ -47,7 +48,7 @@ class OllamaProvider(LLMProvider):
         """
         Return dummy key.
         """
-        return None
+        return "xxx"
 
     @classmethod
     def get_client(cls) -> AsyncClient:
@@ -102,10 +103,10 @@ class OllamaProvider(LLMProvider):
         """
         # If model not provided, get it from config
         if model is None:
-            provider_config = CONFIG.llm_endpoints["openai"]
+            provider_config = CONFIG.llm_endpoints["ollama"]
             # Use the 'high' model for completions by default
             model = provider_config.models.high
-        
+                
         client = self.get_client()
         messages = self._build_messages(prompt, schema)
         try:
@@ -113,8 +114,11 @@ class OllamaProvider(LLMProvider):
                 client.chat(
                     model=model,
                     messages=messages,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
+                    options={
+                        "temperature":temperature,
+                        "num_predict":max_tokens
+                    },
+                    keep_alive=timeout,
                 ),
                 timeout
             )
@@ -125,10 +129,10 @@ class OllamaProvider(LLMProvider):
         try:
             return self.clean_response(response.choices[0].message.content)
         except Exception as e:
-            logger.error(f"Error processing OpenAI response: {e}")
+            logger.error(f"Error processing Ollama response: {e}")
             return {}
 
 
 
 # Create a singleton instance
-provider = OpenAIProvider()
+provider = OllamaProvider()
