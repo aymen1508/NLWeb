@@ -78,7 +78,7 @@ async def get_ollama_embeddings(
             keep_alive=timeout
         )
         
-        embedding = response.embeddings
+        embedding = response.embeddings[0]
         logger.debug(f"Ollama embedding generated, dimension: {len(embedding)}")
         return embedding
     except Exception as e:
@@ -135,7 +135,7 @@ async def get_ollama_batch_embeddings(
             keep_alive=timeout
         )
         
-        embeddings = response.embeddings
+        embeddings = response.embeddings[0]
         logger.debug(f"Ollama batch embeddings generated, count: {len(embeddings)}")
         return embeddings
     except Exception as e:

@@ -122,7 +122,7 @@ async def get_embedding(
             from embedding.ollama_embedding import get_ollama_embeddings
             result = await asyncio.wait_for(
                 get_ollama_embeddings(text, model=model_id),
-                timeout=timeout
+                timeout=100
             )
             logger.debug(f"Ollama embeddings received, dimension: {len(result)}")
             return result
@@ -240,7 +240,7 @@ async def batch_get_embeddings(
             from embedding.ollama_embedding import get_ollama_batch_embeddings
             result = await asyncio.wait_for(
                 get_ollama_batch_embeddings(texts, model=model_id),
-                timeout=timeout
+                timeout=300
             )
             logger.debug(f"Ollama batch embeddings received, count: {len(result)}")
             return result

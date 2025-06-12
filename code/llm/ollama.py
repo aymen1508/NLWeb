@@ -14,6 +14,7 @@ import re
 import logging
 import asyncio
 from typing import Dict, Any, List, Optional
+from pydantic.json_schema import JsonSchemaValue
 
 from click import option
 from ollama import AsyncClient
@@ -91,7 +92,7 @@ class OllamaProvider(LLMProvider):
     async def get_completion(
         self,
         prompt: str,
-        schema: Dict[str, Any],
+        schema: JsonSchemaValue,
         model: Optional[str] = None,
         temperature: float = 0.7,
         max_tokens: int = 2048,
@@ -101,6 +102,13 @@ class OllamaProvider(LLMProvider):
         """
         Send an async chat completion request and return parsed JSON output.
         """
+        # If schema is not a JsonSchemaValue, convert it to one
+        if not isinstance(schema, JsonSchemaValue.__base__):
+            schema= JsonSchemaValue(schema)
+            with open("log.txt","a") as f:
+                f.write(f"Converted schema to JsonSchemaValue: {schema}\n")
+            logger.debug(f"Converted schema to JsonSchemaValue: {schema}")
+                    
         # If model not provided, get it from config
         if model is None:
             provider_config = CONFIG.llm_endpoints["ollama"]
@@ -119,6 +127,7 @@ class OllamaProvider(LLMProvider):
                         "num_predict":max_tokens
                     },
                     keep_alive=timeout,
+                    format=schema
                 ),
                 timeout
             )

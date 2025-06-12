@@ -71,5 +71,5 @@ endpoints:
   ollama:
     llm_type: ollama
     models:
-      high: qwen3:1.7b
-      low: qwen3:1.7b
+      high: gemma3:1b
+      low: gemma3:1b
