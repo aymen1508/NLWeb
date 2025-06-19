@@ -146,7 +146,7 @@ async def ask_llm(
     schema: Dict[str, Any],
     provider: Optional[str] = None,
     level: str = "low",
-    timeout: int = 8,
+    timeout: int = 300,
     query_params: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
     """
@@ -228,6 +228,7 @@ async def ask_llm(
             timeout=timeout
         )
         logger.debug(f"{provider_name} response received, size: {len(str(result))} chars")
+        logger.debug(f"Received response :{str(result)[:100]}...")  # Log a preview of the response
         return result
         
     except asyncio.TimeoutError:

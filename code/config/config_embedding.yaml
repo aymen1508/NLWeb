@@ -1,4 +1,4 @@
-preferred_provider: azure_openai
+preferred_provider: ollama
 
 providers:
   openai:
@@ -24,4 +24,4 @@ providers:
   
   ollama:
     api_endpoint_env: OLLAMA_URL
-    model: llama3
+    model: nomic-embed-text
